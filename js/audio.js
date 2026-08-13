@@ -29,8 +29,12 @@
 
   const settings = loadSettings();
   const unavailable = new Set();
+  const audioCache = new Map();
   let background = null;
-  let musicStarted = false;
+  let backgroundWanted = false;
+  let backgroundPlaying = false;
+  let backgroundPlayPending = false;
+  let audioWarmed = false;
 
   function saveSettings() {
     try {
@@ -46,38 +50,84 @@
 
   function createAudio(name, loop) {
     if (unavailable.has(name) || typeof window.Audio !== "function") return null;
+    if (audioCache.has(name)) return audioCache.get(name);
     const audio = new window.Audio(sources[name]);
-    audio.preload = "none";
+    audio.preload = "auto";
     audio.loop = Boolean(loop);
     audio.addEventListener("error", () => unavailable.add(name), { once: true });
+    audioCache.set(name, audio);
     return audio;
   }
 
-  function safelyPlay(audio, name) {
-    if (!audio || unavailable.has(name)) return;
+  function safelyPlay(audio, name, onStarted, onRejected) {
+    if (!audio || unavailable.has(name)) return null;
     try {
       const playAttempt = audio.play();
       if (playAttempt && typeof playAttempt.catch === "function") {
-        playAttempt.catch(() => unavailable.add(name));
+        playAttempt.then(() => onStarted?.()).catch(() => onRejected?.());
+      } else {
+        onStarted?.();
       }
+      return playAttempt;
     } catch (error) {
-      unavailable.add(name);
+      onRejected?.();
+      return null;
     }
   }
 
-  function startBackground() {
-    if (musicStarted) return;
-    musicStarted = true;
+  function warmAudio() {
+    if (audioWarmed) return;
+    audioWarmed = true;
+    Object.keys(sources).forEach((name) => {
+      const audio = createAudio(name, name === "background");
+      try {
+        audio?.load();
+      } catch (error) {
+        // Loading can be deferred by embedded-browser policies.
+      }
+    });
+  }
+
+  function tryBackground() {
+    if (!backgroundWanted || backgroundPlaying || backgroundPlayPending || settings.muted) return;
     background = background || createAudio("background", true);
     if (!background) return;
     background.volume = effectiveVolume(MUSIC_LEVEL);
-    safelyPlay(background, "background");
+    backgroundPlayPending = true;
+    safelyPlay(
+      background,
+      "background",
+      () => {
+        backgroundPlayPending = false;
+        backgroundPlaying = true;
+      },
+      () => {
+        backgroundPlayPending = false;
+        backgroundPlaying = false;
+      }
+    );
+  }
+
+  function unlock() {
+    warmAudio();
+    tryBackground();
+  }
+
+  function startBackground() {
+    backgroundWanted = true;
+    unlock();
   }
 
   function playEffect(name) {
+    unlock();
     const audio = createAudio(name, false);
     if (!audio) return;
     audio.volume = effectiveVolume(EFFECT_LEVEL);
+    try {
+      audio.currentTime = 0;
+    } catch (error) {
+      // The file may still be preparing inside an iframe.
+    }
     safelyPlay(audio, name);
   }
 
@@ -94,6 +144,7 @@
   function toggleMute() {
     settings.muted = !settings.muted;
     if (background) background.volume = effectiveVolume(MUSIC_LEVEL);
+    if (!settings.muted) tryBackground();
     saveSettings();
     return settings.muted;
   }
@@ -103,6 +154,7 @@
   }
 
   window.GameAudio = {
+    unlock,
     startBackground,
     playShot: () => playEffect("shot"),
     playCorrect: () => playEffect("correct"),

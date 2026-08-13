@@ -62,6 +62,21 @@ button { font: inherit; }
   pointer-events: none;
   background: linear-gradient(90deg, rgba(3,9,15,.82), rgba(3,9,15,.42) 55%, rgba(3,9,15,.72));
 }
+.loading-screen {
+  position: absolute;
+  z-index: 70;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 24px;
+  color: var(--ink);
+  background: radial-gradient(circle at center, rgba(18,38,54,.94), rgba(3,8,14,.98));
+  text-align: center;
+}
+.loading-screen strong { font-family: Georgia, serif; font-size: clamp(1.35rem, 3vw, 2.2rem); letter-spacing: .08em; }
+.loading-screen__progress { color: var(--gold-light); font-weight: 800; }
 .game-shell[data-scene="start"], .game-shell[data-scene="howTo"] { background-image: url("../assets/images/detective-office.png"); }
 .game-shell[data-scene="briefing"] { background-image: url("../assets/images/museum-crime-scene.png"); }
 .game-shell[data-scene="round-1"] { background-image: url("../assets/images/museum-crime-scene.png"); }

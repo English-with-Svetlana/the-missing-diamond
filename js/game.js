@@ -362,6 +362,7 @@
   }
 
   game.addEventListener("click", (event) => {
+    window.GameAudio.unlock();
     const audioActionTarget = event.target.closest("[data-action='toggle-mute']");
     if (audioActionTarget) { handleAction("toggle-mute"); return; }
     if (state.evidenceSequenceActive || state.storyGuideActive) return;
@@ -400,6 +401,7 @@
 
   game.addEventListener("input", (event) => {
     if (!event.target.matches(".audio-control__slider")) return;
+    window.GameAudio.unlock();
     window.GameAudio.setVolume(event.target.value);
     syncAudioControl();
   });
@@ -408,6 +410,17 @@
     game.innerHTML = `<section class="screen"><p class="error-message">The case data could not be loaded correctly.</p></section>`;
   } else {
     window.GameEffects.initialize(game);
-    render();
+    const revealGame = () => {
+      render();
+      window.GameAssets?.preloadRemaining();
+    };
+    if (window.GameAssets) {
+      window.GameAssets.preloadStart((completed, total) => {
+        const progress = game.querySelector(".loading-screen__progress");
+        if (progress) progress.textContent = `${Math.round((completed / total) * 100)}%`;
+      }).then(revealGame);
+    } else {
+      revealGame();
+    }
   }
 })();

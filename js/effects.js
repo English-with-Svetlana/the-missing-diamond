@@ -6,6 +6,12 @@
   let crosshairEnabled = false;
   let pointerX = 0;
   let pointerY = 0;
+  const ALEX_IMAGE = "./assets/images/alex-reed-full.png";
+  const NOTEBOOK_IMAGE = "./assets/images/alex-notebook.png";
+
+  function whenImageReady(path) {
+    return window.GameAssets?.whenReady(path) || Promise.resolve(true);
+  }
 
   function createCrosshair() {
     const element = document.createElement("div");
@@ -100,7 +106,7 @@
     glow.addEventListener("animationend", () => glow.remove(), { once: true });
   }
 
-  function animateEvidence(text, onImpact, onComplete) {
+  function animateEvidenceReady(text, onImpact, onComplete) {
     const evidenceButton = gameArea.querySelector("[data-action='evidence']");
     if (!evidenceButton) {
       onImpact();
@@ -158,7 +164,11 @@
     }, 3900);
   }
 
-  function showAlexGuide(message, onComplete) {
+  function animateEvidence(text, onImpact, onComplete) {
+    whenImageReady(NOTEBOOK_IMAGE).then(() => animateEvidenceReady(text, onImpact, onComplete));
+  }
+
+  function showAlexGuideReady(message, onComplete) {
     if (!gameArea) {
       onComplete();
       return;
@@ -167,7 +177,7 @@
     const guide = document.createElement("aside");
     guide.className = "alex-guide";
     guide.setAttribute("role", "status");
-    guide.innerHTML = `<div class="alex-guide__stage"><div class="alex-guide__bubble">${message}</div><img class="alex-guide__figure" src="./assets/images/alex-reed-full.png" alt="Detective Alex Reed"></div>`;
+    guide.innerHTML = `<div class="alex-guide__stage"><div class="alex-guide__bubble">${message}</div><img class="alex-guide__figure" src="${ALEX_IMAGE}" alt="Detective Alex Reed"></div>`;
     gameArea.appendChild(guide);
 
     window.requestAnimationFrame(() => guide.classList.add("alex-guide--visible"));
@@ -176,6 +186,10 @@
       guide.remove();
       onComplete();
     }, 4500);
+  }
+
+  function showAlexGuide(message, onComplete) {
+    whenImageReady(ALEX_IMAGE).then(() => showAlexGuideReady(message, onComplete));
   }
 
   window.GameEffects = {

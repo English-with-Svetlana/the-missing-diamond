@@ -9,11 +9,17 @@
 </head>
 <body>
   <main id="game" class="game-shell" aria-live="polite">
+    <section class="loading-screen" role="status" aria-live="polite">
+      <p class="eyebrow">Case file #017</p>
+      <strong>LOADING CASE FILES...</strong>
+      <span class="loading-screen__progress">0%</span>
+    </section>
     <noscript>This game needs JavaScript to run.</noscript>
   </main>
 
   <script src="./js/questions.js"></script>
   <script src="./js/answer-order.js"></script>
+  <script src="./js/assets.js"></script>
   <script src="./js/audio.js"></script>
   <script src="./js/effects.js"></script>
   <script src="./js/game.js"></script>
