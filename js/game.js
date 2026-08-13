@@ -65,6 +65,18 @@
     return `<button type="button" class="btn ${className || ""}" data-action="${action}">${label}</button>`;
   }
 
+  function howToIcon(name) {
+    const paths = {
+      target: `<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>`,
+      action: `<path d="m7.5 3.5 9.8 8.8-5.2.7-2.5 4.7z"/><path d="m14.2 13.2 3.5 4.3M5 6.5 3.2 4.7M4 10H1.5M8.5 4V1.5"/>`,
+      search: `<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.3 15.3 5.2 5.2"/>`,
+      lives: `<path d="M20.5 5.9c-2.2-2.3-5.9-1.7-8.5 1.1C9.4 4.2 5.7 3.6 3.5 5.9 1 8.5 2.2 12.4 5 15.2L12 21l7-5.8c2.8-2.8 4-6.7 1.5-9.3Z"/>`,
+      evidence: `<path d="M6 3.5h8l4 4V21H6z"/><path d="M14 3.5V8h4M9 12h6M9 15.5h6"/>`,
+      suspect: `<circle cx="12" cy="8" r="4"/><path d="M4.5 21c.7-4.2 3.3-6.5 7.5-6.5s6.8 2.3 7.5 6.5"/>`
+    };
+    return `<svg class="instruction-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${paths[name]}</svg>`;
+  }
+
   function renderAudioControl() {
     const audioSettings = window.GameAudio.getSettings();
     const icon = audioSettings.muted ? "🔇" : "🔊";
@@ -100,7 +112,7 @@
   function renderHowTo() {
     return renderStart() + `<div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="how-title">
       <section class="panel how-to-panel"><h2 id="how-title">HOW TO PLAY</h2><div class="instructions">
-        <p>🎯 Move the target with your mouse.</p><p>🔫 Click to shoot.</p><p>🔎 Find the correct answer or the mistake.</p><p>❤️ You have 3 lives.</p><p>🧩 Find clues.</p><p>🕵️ Catch the thief!</p>
+        <p>${howToIcon("target")} Move the target with your mouse.</p><p>${howToIcon("action")} Click to shoot.</p><p>${howToIcon("search")} Find the correct answer or the mistake.</p><p>${howToIcon("lives")} You have 3 lives.</p><p>${howToIcon("evidence")} Find clues.</p><p>${howToIcon("suspect")} Catch the thief!</p>
       </div>${button("GOT IT!", "close-how", "btn--primary")}</section>
     </div>`;
   }

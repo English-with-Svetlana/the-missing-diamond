@@ -328,6 +328,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4cqw, 3.4rem); }
 .how-to-panel { text-align: center; }
 .instructions { width: min(580px, 100%); margin: 0 auto 22px; display: grid; gap: 9px; text-align: center; font-size: 1.1rem; line-height: 1.55; }
 .instructions p { margin: 0; text-align: center; text-wrap: balance; }
+.instruction-icon { width: 1.15em; height: 1.15em; margin-right: .28em; color: var(--gold-light); vertical-align: -.2em; }
 .briefing-copy { display: grid; gap: 8px; font-size: 1.08rem; }
 .briefing-copy p { margin: 0; }
 .suspect-grid { width: min(1000px, 100%); margin-inline: auto; align-items: stretch; }
