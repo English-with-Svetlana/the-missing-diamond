@@ -55,6 +55,10 @@
     audio.preload = "auto";
     audio.loop = Boolean(loop);
     audio.addEventListener("error", () => unavailable.add(name), { once: true });
+    if (name === "background") {
+      audio.addEventListener("playing", () => { backgroundPlaying = true; });
+      audio.addEventListener("pause", () => { backgroundPlaying = false; });
+    }
     audioCache.set(name, audio);
     return audio;
   }
@@ -89,6 +93,7 @@
   }
 
   function tryBackground() {
+    if (backgroundPlaying && background?.paused) backgroundPlaying = false;
     if (!backgroundWanted || backgroundPlaying || backgroundPlayPending || settings.muted) return;
     background = background || createAudio("background", true);
     if (!background) return;

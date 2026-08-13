@@ -1,34 +1,39 @@
 (function () {
   "use strict";
 
+  const IMAGE_BASE = "https://english-with-svetlana.github.io/the-missing-diamond/assets/images/";
+  const imageUrl = (filename) => `${IMAGE_BASE}${filename}`;
   const paths = {
-    detectiveOffice: "./assets/images/detective-office.png",
-    alexStart: "./assets/images/alex-reed.png",
-    alexCompanion: "./assets/images/alex-reed-full.png",
-    notebook: "./assets/images/alex-notebook.png",
-    emma: "./assets/images/emma-brooks.png",
-    james: "./assets/images/james-miller.png",
-    oliver: "./assets/images/oliver-grant.png",
-    crimeScene: "./assets/images/museum-crime-scene.png",
-    interrogationRoom: "./assets/images/interrogation-room.png",
-    evidenceBoard: "./assets/images/evidence-board.png"
+    detectiveOffice: imageUrl("detective-office.png"),
+    alexStart: imageUrl("alex-reed.png"),
+    alexCompanion: imageUrl("alex-reed-full.png"),
+    notebook: imageUrl("alex-notebook.png"),
+    emma: imageUrl("emma-brooks.png"),
+    james: imageUrl("james-miller.png"),
+    oliver: imageUrl("oliver-grant.png"),
+    crimeScene: imageUrl("museum-crime-scene.png"),
+    interrogationRoom: imageUrl("interrogation-room.png"),
+    evidenceBoard: imageUrl("evidence-board.png")
   };
 
   const startAssets = [paths.detectiveOffice, paths.alexStart];
   const preloadGroups = [
-    [paths.emma, paths.james, paths.oliver],
-    [paths.crimeScene],
-    [paths.alexCompanion, paths.notebook],
+    [paths.emma, paths.james, paths.oliver, paths.crimeScene, paths.alexCompanion],
+    [paths.notebook],
     [paths.interrogationRoom, paths.evidenceBoard]
   ];
   const images = new Map();
-  const requests = new Map();
+  const records = new Map();
 
-  function loadImage(path) {
-    if (requests.has(path)) return requests.get(path);
+  function requestImage(path) {
+    const existing = records.get(path);
+    if (existing?.status === "loaded") return Promise.resolve(true);
+    if (existing?.status === "loading") return existing.promise;
 
-    const request = new Promise((resolve) => {
+    const record = { status: "loading", promise: null };
+    record.promise = new Promise((resolve) => {
       if (typeof window.Image !== "function") {
+        record.status = "failed";
         resolve(false);
         return;
       }
@@ -40,6 +45,7 @@
         if (settled) return;
         settled = true;
         window.clearTimeout(timeoutId);
+        record.status = loaded ? "loaded" : "failed";
         resolve(loaded);
       };
       const timeoutId = window.setTimeout(() => finish(false), 12000);
@@ -49,14 +55,22 @@
       if (image.complete && image.naturalWidth > 0) finish(true);
     });
 
-    requests.set(path, request);
-    return request;
+    records.set(path, record);
+    return record.promise;
   }
 
-  function preload(pathsToLoad, onProgress) {
+  function loadImage(path, retries) {
+    return requestImage(path).then((loaded) => {
+      if (loaded || retries <= 0) return loaded;
+      return new Promise((resolve) => window.setTimeout(resolve, 250))
+        .then(() => loadImage(path, retries - 1));
+    });
+  }
+
+  function preload(pathsToLoad, onProgress, retries) {
     let completed = 0;
     if (onProgress) onProgress(0, pathsToLoad.length);
-    return Promise.all(pathsToLoad.map((path) => loadImage(path).then((loaded) => {
+    return Promise.all(pathsToLoad.map((path) => loadImage(path, retries || 0).then((loaded) => {
       completed += 1;
       if (onProgress) onProgress(completed, pathsToLoad.length);
       return { path, loaded };
@@ -69,7 +83,7 @@
 
   function preloadRemaining() {
     return preloadGroups.reduce(
-      (sequence, group) => sequence.then(() => preload(group)),
+      (sequence, group) => sequence.then(() => preload(group, null, 1)),
       Promise.resolve()
     );
   }
@@ -78,6 +92,6 @@
     paths,
     preloadStart,
     preloadRemaining,
-    whenReady: loadImage
+    whenReady: (path) => loadImage(path, 2)
   };
 })();

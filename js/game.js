@@ -5,6 +5,13 @@
   const questions = window.GAME_QUESTIONS || [];
   const ROUND_NAMES = { 1: "CRIME SCENE", 2: "INTERROGATION", 3: "EVIDENCE BOARD" };
   const CORRECT_ANSWER_DELAY = { 1: 2500, 2: 1900, 3: 1900 };
+  const IMAGE_BASE = "https://english-with-svetlana.github.io/the-missing-diamond/assets/images/";
+  const imagePaths = window.GameAssets?.paths || {
+    alexStart: `${IMAGE_BASE}alex-reed.png`,
+    emma: `${IMAGE_BASE}emma-brooks.png`,
+    james: `${IMAGE_BASE}james-miller.png`,
+    oliver: `${IMAGE_BASE}oliver-grant.png`
+  };
 
   const state = {
     screen: "start",
@@ -86,7 +93,7 @@
       <p class="subtitle">A Grammar Detective Game</p>
       <div class="panel start-brief"><p>Detective Alex Reed is waiting for a new case.</p></div>
       <div class="button-row">${button("START INVESTIGATION", "start", "btn--primary")}${button("HOW TO PLAY", "how-to", "btn--ghost")}</div></div>
-      <img class="alex-hero" src="./assets/images/alex-reed.png" alt="Detective Alex Reed">
+      <img class="alex-hero" src="${imagePaths.alexStart}" alt="Detective Alex Reed">
     </section>`;
   }
 
@@ -100,9 +107,9 @@
 
   function suspectCards(selectable) {
     const suspects = [
-      ["emma", "./assets/images/emma-brooks.png", "EMMA BROOKS", "Museum Curator"],
-      ["james", "./assets/images/james-miller.png", "JAMES MILLER", "Security Guard"],
-      ["oliver", "./assets/images/oliver-grant.png", "OLIVER GRANT", "Photographer"]
+      ["emma", imagePaths.emma, "EMMA BROOKS", "Museum Curator"],
+      ["james", imagePaths.james, "JAMES MILLER", "Security Guard"],
+      ["oliver", imagePaths.oliver, "OLIVER GRANT", "Photographer"]
     ];
     return `<div class="suspect-grid ${selectable ? "suspect-grid--final" : ""}">${suspects.map(([id, image, name, job]) => selectable
       ? `<button class="suspect-card btn" type="button" data-suspect="${id}"><div class="suspect-portrait"><img src="${image}" alt="${name}"></div><h3>${name}</h3><p>${job}</p></button>`
@@ -197,7 +204,7 @@
   }
 
   function renderCaseClosed() {
-    return `<section class="screen case-closed-screen"><p class="eyebrow">Guilty</p><h2 class="case-closed">CASE CLOSED</h2><div class="panel case-closed-panel"><img class="alex-victory" src="./assets/images/alex-reed.png" alt="Detective Alex Reed"><h3>THE BLUE STAR HAS BEEN FOUND</h3><p>Oliver said he had left at 9:00.</p><p>But his camera took a photo at 9:27.</p><p>A piece of his camera strap was found near the diamond.</p><p><strong>He lied.</strong></p></div>${button("VIEW DETECTIVE REPORT", "show-results", "btn--primary case-report-button")}</section>`;
+    return `<section class="screen case-closed-screen"><p class="eyebrow">Guilty</p><h2 class="case-closed">CASE CLOSED</h2><div class="panel case-closed-panel"><img class="alex-victory" src="${imagePaths.alexStart}" alt="Detective Alex Reed"><h3>THE BLUE STAR HAS BEEN FOUND</h3><p>Oliver said he had left at 9:00.</p><p>But his camera took a photo at 9:27.</p><p>A piece of his camera strap was found near the diamond.</p><p><strong>He lied.</strong></p></div>${button("VIEW DETECTIVE REPORT", "show-results", "btn--primary case-report-button")}</section>`;
   }
 
   function render() {
@@ -398,6 +405,10 @@
       }
     }
   });
+
+  game.addEventListener("pointerdown", () => {
+    window.GameAudio.unlock();
+  }, { passive: true });
 
   game.addEventListener("input", (event) => {
     if (!event.target.matches(".audio-control__slider")) return;

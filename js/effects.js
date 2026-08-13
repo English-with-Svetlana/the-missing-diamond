@@ -6,8 +6,10 @@
   let crosshairEnabled = false;
   let pointerX = 0;
   let pointerY = 0;
-  const ALEX_IMAGE = "./assets/images/alex-reed-full.png";
-  const NOTEBOOK_IMAGE = "./assets/images/alex-notebook.png";
+  const ALEX_IMAGE = window.GameAssets?.paths?.alexCompanion
+    || "https://english-with-svetlana.github.io/the-missing-diamond/assets/images/alex-reed-full.png";
+  const NOTEBOOK_IMAGE = window.GameAssets?.paths?.notebook
+    || "https://english-with-svetlana.github.io/the-missing-diamond/assets/images/alex-notebook.png";
 
   function whenImageReady(path) {
     return window.GameAssets?.whenReady(path) || Promise.resolve(true);
@@ -24,8 +26,10 @@
   function positionCrosshair(clientX, clientY) {
     if (!gameArea || !crosshair) return;
     const bounds = gameArea.getBoundingClientRect();
-    pointerX = clientX - bounds.left;
-    pointerY = clientY - bounds.top;
+    const scaleX = bounds.width ? gameArea.clientWidth / bounds.width : 1;
+    const scaleY = bounds.height ? gameArea.clientHeight / bounds.height : 1;
+    pointerX = (clientX - bounds.left) * scaleX;
+    pointerY = (clientY - bounds.top) * scaleY;
     crosshair.style.left = `${pointerX}px`;
     crosshair.style.top = `${pointerY}px`;
   }
@@ -89,11 +93,13 @@
 
   function showScorePopup(clientX, clientY) {
     const bounds = gameArea.getBoundingClientRect();
+    const scaleX = bounds.width ? gameArea.clientWidth / bounds.width : 1;
+    const scaleY = bounds.height ? gameArea.clientHeight / bounds.height : 1;
     const popup = document.createElement("strong");
     popup.className = "score-popup";
     popup.textContent = "+100";
-    popup.style.left = `${clientX - bounds.left}px`;
-    popup.style.top = `${clientY - bounds.top}px`;
+    popup.style.left = `${(clientX - bounds.left) * scaleX}px`;
+    popup.style.top = `${(clientY - bounds.top) * scaleY}px`;
     gameArea.appendChild(popup);
     popup.addEventListener("animationend", () => popup.remove(), { once: true });
   }
@@ -189,7 +195,10 @@
   }
 
   function showAlexGuide(message, onComplete) {
-    whenImageReady(ALEX_IMAGE).then(() => showAlexGuideReady(message, onComplete));
+    whenImageReady(ALEX_IMAGE).then((loaded) => {
+      if (loaded) showAlexGuideReady(message, onComplete);
+      else onComplete();
+    });
   }
 
   window.GameEffects = {

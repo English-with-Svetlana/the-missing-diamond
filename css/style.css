@@ -26,32 +26,52 @@ body {
 }
 
 body {
-  display: grid;
-  place-items: center;
   background: #03080e;
   color: var(--ink);
 }
 
 button { font: inherit; }
 
-.game-shell {
+.game-viewport {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 1600px;
-  max-height: 900px;
+  overflow: hidden;
+  background: #03080e;
+}
+
+.game-shell {
+  --game-scale: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1600px;
+  height: 900px;
   min-width: 0;
   min-height: 0;
-  margin-inline: auto;
+  margin: -450px 0 0 -800px;
   overflow: hidden;
   background:
     radial-gradient(circle at 72% 18%, rgba(213, 168, 75, 0.15), transparent 28%),
     linear-gradient(145deg, #102438, var(--navy) 50%, #050b12);
   border: 1px solid #26394a;
   isolation: isolate;
+  container-type: size;
   background-position: center;
   background-size: cover;
+  transform: scale(var(--game-scale));
+  transform-origin: center;
   transition: background-image .45s ease;
+}
+
+.game-viewport--mobile .game-shell {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  transform: none;
 }
 
 .game-shell::before {
@@ -75,17 +95,17 @@ button { font: inherit; }
   background: radial-gradient(circle at center, rgba(18,38,54,.94), rgba(3,8,14,.98));
   text-align: center;
 }
-.loading-screen strong { font-family: Georgia, serif; font-size: clamp(1.35rem, 3vw, 2.2rem); letter-spacing: .08em; }
+.loading-screen strong { font-family: Georgia, serif; font-size: clamp(1.35rem, 3cqw, 2.2rem); letter-spacing: .08em; }
 .loading-screen__progress { color: var(--gold-light); font-weight: 800; }
-.game-shell[data-scene="start"], .game-shell[data-scene="howTo"] { background-image: url("../assets/images/detective-office.png"); }
-.game-shell[data-scene="briefing"] { background-image: url("../assets/images/museum-crime-scene.png"); }
-.game-shell[data-scene="round-1"] { background-image: url("../assets/images/museum-crime-scene.png"); }
-.game-shell[data-scene="round-2"] { background-image: url("../assets/images/interrogation-room.png"); }
-.game-shell[data-scene="round-3"] { background-image: url("../assets/images/evidence-board.png"); background-position: center center; }
+.game-shell[data-scene="start"], .game-shell[data-scene="howTo"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/detective-office.png"); }
+.game-shell[data-scene="briefing"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/museum-crime-scene.png"); }
+.game-shell[data-scene="round-1"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/museum-crime-scene.png"); }
+.game-shell[data-scene="round-2"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/interrogation-room.png"); }
+.game-shell[data-scene="round-3"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/evidence-board.png"); background-position: center center; }
 .game-shell[data-scene="decision"],
 .game-shell[data-scene="transition"],
-.game-shell[data-scene="review"] { background-image: url("../assets/images/evidence-board.png"); }
-.game-shell[data-scene="caseClosed"] { background-image: url("../assets/images/detective-office.png"); animation: case-background-in .55s ease-out both; }
+.game-shell[data-scene="review"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/evidence-board.png"); }
+.game-shell[data-scene="caseClosed"] { background-image: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/detective-office.png"); animation: case-background-in .55s ease-out both; }
 .game-shell[data-scene="caseClosed"]::before { background: radial-gradient(circle at 50% 42%, rgba(3,9,15,.62), rgba(3,9,15,.76) 72%, rgba(1,4,7,.88)); }
 .game-shell[data-scene="round-1"]::before { background: linear-gradient(rgba(3,9,15,.48), rgba(3,9,15,.74)); }
 .game-shell[data-scene="round-2"]::before { background: linear-gradient(90deg, rgba(3,9,15,.76), rgba(3,9,15,.42), rgba(3,9,15,.76)); }
@@ -93,18 +113,18 @@ button { font: inherit; }
 .game-shell[data-scene="review"]::before { background: rgba(3,9,15,.7); }
 
 .scene { position: relative; }
-.scene--start { align-items: flex-start; padding-right: min(40vw, 600px); text-align: left; }
+.scene--start { align-items: flex-start; padding-right: min(40cqw, 600px); text-align: left; }
 .start-content { position: relative; z-index: 2; width: min(760px, 100%); }
-.scene--start h1 { font-size: clamp(2.2rem, 5.25vw, 4.9rem); }
+.scene--start h1 { font-size: clamp(2.2rem, 5.25cqw, 4.9rem); }
 .start-content .button-row { justify-content: center; gap: 14px; }
 .start-brief { width: min(520px, 100%); margin: 16px auto 14px; padding: 20px 26px; text-align: center; }
 .start-brief p { margin: 0; }
 .alex-hero {
   position: absolute;
   z-index: 1;
-  right: clamp(1%, 5vw, 8%);
+  right: clamp(1%, 5cqw, 8%);
   bottom: -3%;
-  width: clamp(280px, 34vw, 520px);
+  width: clamp(280px, 34cqw, 520px);
   height: 92%;
   object-fit: contain;
   object-position: bottom center;
@@ -187,9 +207,9 @@ button { font: inherit; }
 .alex-guide--leaving { opacity: 0; }
 .alex-guide__stage {
   position: absolute;
-  right: clamp(12px, 2.5vw, 38px);
+  right: clamp(12px, 2.5cqw, 38px);
   bottom: 0;
-  height: clamp(440px, 74vh, 800px);
+  height: clamp(440px, 74cqh, 800px);
   aspect-ratio: 2 / 3;
   transform: translateX(90px);
   transition: transform .52s ease;
@@ -210,14 +230,14 @@ button { font: inherit; }
   z-index: 2;
   right: 70%;
   top: 5%;
-  width: clamp(175px, 17vw, 240px);
-  padding: clamp(14px, 2vw, 20px);
+  width: clamp(175px, 17cqw, 240px);
+  padding: clamp(14px, 2cqw, 20px);
   color: #192433;
   background: linear-gradient(145deg, #fff4d4, #e9d7ab);
   border: 1px solid rgba(113,82,32,.55);
   border-radius: 18px;
   box-shadow: 0 14px 34px rgba(0,0,0,.5), inset 0 1px rgba(255,255,255,.65);
-  font-size: clamp(1rem, 1.9vw, 1.3rem);
+  font-size: clamp(1rem, 1.9cqw, 1.3rem);
   font-weight: 700;
   line-height: 1.4;
   text-align: center;
@@ -245,7 +265,7 @@ button { font: inherit; }
   min-width: 0;
   min-height: 0;
   margin-inline: auto;
-  padding: clamp(24px, 5vw, 72px);
+  padding: clamp(24px, 5cqw, 72px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -257,15 +277,15 @@ button { font: inherit; }
 .screen--game { justify-content: flex-start; }
 .eyebrow { margin: 0; color: var(--gold-light); letter-spacing: .22em; text-transform: uppercase; font-size: .8rem; }
 h1, h2, h3, p { margin-top: 0; }
-h1 { margin-bottom: 4px; font-family: Georgia, serif; font-size: clamp(2.5rem, 7vw, 6.5rem); letter-spacing: .04em; }
-h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
+h1 { margin-bottom: 4px; font-family: Georgia, serif; font-size: clamp(2.5rem, 7cqw, 6.5rem); letter-spacing: .04em; }
+h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4cqw, 3.4rem); }
 .subtitle, .muted { color: var(--muted); }
-.subtitle { font-size: clamp(1rem, 2vw, 1.4rem); }
+.subtitle { font-size: clamp(1rem, 2cqw, 1.4rem); }
 
 .panel {
   width: min(920px, 100%);
   margin-inline: auto;
-  padding: clamp(22px, 4vw, 42px);
+  padding: clamp(22px, 4cqw, 42px);
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -312,17 +332,17 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
 .briefing-copy p { margin: 0; }
 .suspect-grid { width: min(1000px, 100%); margin-inline: auto; align-items: stretch; }
 .suspect-card { flex: 1 1 220px; min-width: 0; padding: 14px; overflow: hidden; border-radius: 12px; background: rgba(16,31,45,.92); border: 1px solid var(--line); box-shadow: 0 18px 35px rgba(0,0,0,.38); }
-.suspect-portrait { height: clamp(180px, 27vh, 300px); overflow: hidden; margin-bottom: 16px; border-radius: 8px; background: #111e2a; }
+.suspect-portrait { height: clamp(180px, 27cqh, 300px); overflow: hidden; margin-bottom: 16px; border-radius: 8px; background: #111e2a; }
 .suspect-portrait img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 22%; transition: transform .35s ease, filter .35s ease; }
 .suspect-card:hover { border-color: rgba(240,207,122,.72); box-shadow: 0 16px 40px rgba(0,0,0,.48), 0 0 22px rgba(213,168,75,.2); }
 .suspect-card:hover .suspect-portrait img { transform: scale(1.045); }
 .suspect-grid--final { width: min(1100px, 100%); }
 .suspect-grid--final .suspect-card { flex-basis: 260px; }
-.decision-screen { justify-content: flex-start; gap: 0; padding-top: clamp(24px, 4vh, 48px); padding-bottom: clamp(20px, 3vh, 38px); }
+.decision-screen { justify-content: flex-start; gap: 0; padding-top: clamp(24px, 4cqh, 48px); padding-bottom: clamp(20px, 3cqh, 38px); }
 .decision-header {
   width: min(760px, 92%);
   margin-inline: auto;
-  padding: clamp(14px, 2.3vh, 22px) clamp(22px, 4vw, 48px);
+  padding: clamp(14px, 2.3cqh, 22px) clamp(22px, 4cqw, 48px);
   border: 1px solid rgba(240,207,122,.4);
   border-radius: 15px;
   background: linear-gradient(100deg, rgba(5,14,22,.52), rgba(12,27,40,.76), rgba(5,14,22,.52));
@@ -330,7 +350,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   backdrop-filter: blur(5px);
 }
 .decision-header .eyebrow { margin-bottom: 7px; }
-.decision-header h2 { margin: 0; color: #fffdf5; font-size: clamp(1.8rem, 3.8vw, 3.3rem); text-shadow: 0 3px 18px rgba(0,0,0,.75); }
+.decision-header h2 { margin: 0; color: #fffdf5; font-size: clamp(1.8rem, 3.8cqw, 3.3rem); text-shadow: 0 3px 18px rgba(0,0,0,.75); }
 .decision-prompt { width: fit-content; margin: 14px 0 16px; padding: 8px 20px; color: var(--ink); background: rgba(6,17,27,.78); border: 1px solid rgba(240,207,122,.42); border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,.28); }
 .decision-screen .suspect-grid { margin-top: 0; }
 .decision-error-slot { position: relative; z-index: 4; width: min(620px, 94%); min-height: 74px; margin: 20px auto 0; display: grid; place-items: start center; }
@@ -352,7 +372,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
 }
 .decision-error strong { color: #cf8385; }
 .decision-error span { color: #f1e8d6; }
-.decision-evidence-button { margin-top: clamp(18px, 2.5vh, 24px); color: var(--ink); background: rgba(6,17,27,.82); border-color: rgba(240,207,122,.62); box-shadow: 0 5px 0 #07101a, 0 0 14px rgba(213,168,75,.1); }
+.decision-evidence-button { margin-top: clamp(18px, 2.5cqh, 24px); color: var(--ink); background: rgba(6,17,27,.82); border-color: rgba(240,207,122,.62); box-shadow: 0 5px 0 #07101a, 0 0 14px rgba(213,168,75,.1); }
 .decision-evidence-button:hover { transform: translateY(-2px) scale(1.025); box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 0 19px rgba(213,168,75,.28), 0 5px 0 #07101a; }
 .portrait { height: 110px; display: grid; place-items: center; margin-bottom: 16px; border-radius: 8px; background: linear-gradient(135deg, #31475b, #111e2a); font-size: 3rem; }
 .suspect-card h3 { margin-bottom: 5px; }
@@ -360,9 +380,9 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
 .hud { width: 100%; margin-inline: auto; justify-content: space-between; align-items: center; padding: 12px 18px; background: rgba(3, 9, 15, .65); border-radius: 10px; }
 .hud button { padding: 8px 12px; }
 .question-number { color: var(--gold-light); }
-.question { font-size: clamp(1.45rem, 3.3vw, 2.55rem); line-height: 1.55; }
+.question { font-size: clamp(1.45rem, 3.3cqw, 2.55rem); line-height: 1.55; }
 .words { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.word { font-size: clamp(1.05rem, 2.4vw, 1.55rem); padding: 9px 13px; }
+.word { font-size: clamp(1.05rem, 2.4cqw, 1.55rem); padding: 9px 13px; }
 .answer-grid { margin-top: 20px; }
 .answer { min-width: 170px; font-size: 1.05rem; font-weight: 700; }
 .answer--correct,
@@ -396,7 +416,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   text-shadow: 0 0 16px rgba(74, 170, 123, .72);
 }
 
-.evidence-list, .review-list { display: grid; gap: 12px; text-align: left; max-height: 55vh; overflow: auto; padding-right: 8px; }
+.evidence-list, .review-list { display: grid; gap: 12px; text-align: left; max-height: 55cqh; overflow: auto; padding-right: 8px; }
 .evidence-card, .review-item { padding: 14px; border-left: 3px solid var(--gold); background: rgba(255,255,255,.045); }
 .evidence-card p, .review-item p { margin: 3px 0; }
 .evidence-button--received { animation: evidence-received .32s ease-out; }
@@ -405,10 +425,10 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   z-index: 46;
   left: 50%;
   top: 50%;
-  width: min(780px, 92%, 132vh);
+  width: min(780px, 92%, 132cqh);
   aspect-ratio: 3 / 2;
   padding: 0;
-  background: url("../assets/images/alex-notebook.png") center/contain no-repeat;
+  background: url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/alex-notebook.png") center/contain no-repeat;
   border: 0;
   border-radius: 3%;
   box-shadow: 0 22px 58px rgba(0,0,0,.58);
@@ -428,10 +448,10 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: clamp(12px, 2vw, 24px);
+  gap: clamp(12px, 2cqw, 24px);
   color: #17283c;
   font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: clamp(.9rem, 2vw, 1.38rem);
+  font-size: clamp(.9rem, 2cqw, 1.38rem);
   font-style: italic;
   line-height: 1.45;
   text-align: center;
@@ -439,7 +459,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   word-break: normal;
   overflow-wrap: normal;
 }
-.new-evidence-card strong { width: 100%; color: #14263c; font-family: Georgia, serif; font-size: clamp(1rem, 2.5vw, 1.75rem); font-style: normal; letter-spacing: .08em; text-align: center; white-space: normal; word-break: normal; }
+.new-evidence-card strong { width: 100%; color: #14263c; font-family: Georgia, serif; font-size: clamp(1rem, 2.5cqw, 1.75rem); font-style: normal; letter-spacing: .08em; text-align: center; white-space: normal; word-break: normal; }
 .new-evidence-card span { width: 100%; text-align: center; text-wrap: balance; white-space: normal; word-break: normal; overflow-wrap: normal; }
 .new-evidence-card--clone {
   position: fixed;
@@ -452,7 +472,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   transition: none;
   will-change: transform, opacity;
 }
-.overlay--evidence { background: linear-gradient(rgba(1,5,9,.72), rgba(1,5,9,.87)), url("../assets/images/evidence-board.png") center/cover; }
+.overlay--evidence { background: linear-gradient(rgba(1,5,9,.72), rgba(1,5,9,.87)), url("https://english-with-svetlana.github.io/the-missing-diamond/assets/images/evidence-board.png") center/cover; }
 .evidence-panel { background: rgba(10,22,33,.91); backdrop-filter: blur(4px); }
 .transition-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
 .transition-list span { padding: 12px; background: rgba(255,255,255,.05); }
@@ -461,9 +481,9 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
 .stat strong { display: block; margin-top: 5px; color: var(--gold-light); font-size: 1.3rem; }
 .case-closed { color: var(--gold-light); }
 .case-closed-screen .eyebrow, .case-closed-screen .case-closed { animation: case-content-in .45s .18s ease-out both; }
-.case-closed-panel { position: relative; overflow: hidden; padding-right: clamp(180px, 27vw, 310px); background: rgba(10,23,35,.88); border-color: rgba(240,207,122,.42); box-shadow: 0 24px 58px rgba(0,0,0,.48); animation: case-content-in .48s .48s ease-out both; }
+.case-closed-panel { position: relative; overflow: hidden; padding-right: clamp(180px, 27cqw, 310px); background: rgba(10,23,35,.88); border-color: rgba(240,207,122,.42); box-shadow: 0 24px 58px rgba(0,0,0,.48); animation: case-content-in .48s .48s ease-out both; }
 .case-report-button { animation: case-content-in .42s .82s ease-out both; }
-.alex-victory { position: absolute; right: 0; bottom: -18%; width: clamp(190px, 26vw, 300px); height: 118%; object-fit: contain; object-position: bottom; filter: drop-shadow(-10px 10px 15px rgba(0,0,0,.55)); }
+.alex-victory { position: absolute; right: 0; bottom: -18%; width: clamp(190px, 26cqw, 300px); height: 118%; object-fit: contain; object-position: bottom; filter: drop-shadow(-10px 10px 15px rgba(0,0,0,.55)); }
 .error-message { color: #ffb1b1; }
 
 @keyframes crosshair-recoil { 45% { transform: translate(-50%, -50%) scale(1.28); } }
@@ -482,6 +502,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
 @media (max-width: 650px) {
   .game-shell { min-height: 0; }
   .screen { padding: 20px 14px; }
+  .game-shell[data-scene^="round-"] .screen--game { padding-top: 68px; }
   .hud { justify-content: center; }
   .panel { padding: 20px 15px; }
   .answer { flex: 1 1 100%; }
@@ -505,25 +526,9 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3.4rem); }
   .decision-prompt { padding: 7px 16px; }
 }
 
-@media (max-width: 420px), (max-height: 540px) {
+@media (max-width: 420px) {
   .alex-guide__stage { height: clamp(250px, 52vh, 360px); }
   .alex-guide__bubble { right: 61%; top: 3%; width: min(38vw, 180px); padding: 10px 12px; }
-}
-
-@media (min-width: 651px) and (max-height: 720px) {
-  .screen { gap: 12px; padding-top: 22px; padding-bottom: 22px; }
-  .suspect-portrait { height: 185px; }
-  .scene--briefing .briefing-copy { padding: 14px 24px; gap: 4px; font-size: .96rem; }
-  .scene--briefing .suspect-portrait { height: clamp(120px, 22vh, 160px); }
-  .scene--start { align-items: center; padding-inline: clamp(24px, 5vw, 72px); text-align: center; }
-  .scene--start .start-content { margin-inline: auto; }
-  .alex-guide__stage { height: clamp(300px, 56vh, 400px); }
-  .alex-guide__bubble { right: 66%; width: clamp(155px, 17vw, 200px); padding: 12px 15px; font-size: clamp(.9rem, 1.7vw, 1.08rem); }
-  .decision-screen { gap: 9px; padding-top: 14px; padding-bottom: 14px; }
-  .decision-header { padding: 10px 24px; }
-  .decision-header h2 { font-size: clamp(1.65rem, 3.5vw, 2.55rem); }
-  .decision-prompt { padding-block: 6px; }
-  .decision-screen .suspect-portrait { height: 170px; }
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
