@@ -8,6 +8,7 @@
   const IMAGE_BASE = "https://english-with-svetlana.github.io/the-missing-diamond/assets/images/";
   const imagePaths = window.GameAssets?.paths || {
     alexStart: `${IMAGE_BASE}alex-reed.png`,
+    caseSolved: `${IMAGE_BASE}case-solved-diamond.png`,
     emma: `${IMAGE_BASE}emma-brooks.png`,
     james: `${IMAGE_BASE}james-miller.png`,
     oliver: `${IMAGE_BASE}oliver-grant.png`
@@ -216,7 +217,7 @@
   }
 
   function renderCaseClosed() {
-    return `<section class="screen case-closed-screen"><p class="eyebrow">Guilty</p><h2 class="case-closed">CASE CLOSED</h2><div class="panel case-closed-panel"><img class="alex-victory" src="${imagePaths.alexStart}" alt="Detective Alex Reed"><h3>THE BLUE STAR HAS BEEN FOUND</h3><p>Oliver said he had left at 9:00.</p><p>But his camera took a photo at 9:27.</p><p>A piece of his camera strap was found near the diamond.</p><p><strong>He lied.</strong></p></div>${button("VIEW DETECTIVE REPORT", "show-results", "btn--primary case-report-button")}</section>`;
+    return `<section class="screen case-closed-screen"><p class="eyebrow">Guilty</p><h2 class="case-closed">CASE CLOSED</h2><div class="panel case-closed-panel"><img class="alex-victory" src="${imagePaths.caseSolved}" alt="Detective Alex Reed holding the recovered Blue Star diamond"><h3>THE BLUE STAR HAS BEEN FOUND</h3><p>Oliver said he had left at 9:00.</p><p>But his camera took a photo at 9:27.</p><p>A piece of his camera strap was found near the diamond.</p><p><strong>He lied.</strong></p></div>${button("VIEW DETECTIVE REPORT", "show-results", "btn--primary case-report-button")}</section>`;
   }
 
   function render() {

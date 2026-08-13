@@ -7,6 +7,7 @@
     detectiveOffice: imageUrl("detective-office.png"),
     alexStart: imageUrl("alex-reed.png"),
     alexCompanion: imageUrl("alex-reed-full.png"),
+    caseSolved: imageUrl("case-solved-diamond.png"),
     notebook: imageUrl("alex-notebook.png"),
     emma: imageUrl("emma-brooks.png"),
     james: imageUrl("james-miller.png"),
@@ -20,7 +21,7 @@
   const preloadGroups = [
     [paths.emma, paths.james, paths.oliver, paths.crimeScene, paths.alexCompanion],
     [paths.notebook],
-    [paths.interrogationRoom, paths.evidenceBoard]
+    [paths.interrogationRoom, paths.evidenceBoard, paths.caseSolved]
   ];
   const images = new Map();
   const records = new Map();

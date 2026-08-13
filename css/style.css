@@ -484,7 +484,7 @@ h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4cqw, 3.4rem); }
 .case-closed-screen .eyebrow, .case-closed-screen .case-closed { animation: case-content-in .45s .18s ease-out both; }
 .case-closed-panel { position: relative; overflow: hidden; padding-right: clamp(180px, 27cqw, 310px); background: rgba(10,23,35,.88); border-color: rgba(240,207,122,.42); box-shadow: 0 24px 58px rgba(0,0,0,.48); animation: case-content-in .48s .48s ease-out both; }
 .case-report-button { animation: case-content-in .42s .82s ease-out both; }
-.alex-victory { position: absolute; right: 0; bottom: -18%; width: clamp(190px, 26cqw, 300px); height: 118%; object-fit: contain; object-position: bottom; filter: drop-shadow(-10px 10px 15px rgba(0,0,0,.55)); }
+.alex-victory { position: absolute; right: 0; bottom: -18%; width: clamp(190px, 26cqw, 300px); height: 118%; object-fit: cover; object-position: 78% center; filter: drop-shadow(-10px 10px 15px rgba(0,0,0,.55)); }
 .error-message { color: #ffb1b1; }
 
 @keyframes crosshair-recoil { 45% { transform: translate(-50%, -50%) scale(1.28); } }
